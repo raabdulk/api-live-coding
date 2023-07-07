@@ -4,11 +4,12 @@
 // *  Сделать форму входа динамической (+)
 // *  Отрефакторить приложение на модули
 //    * api (+)
-//    * ... TODO
+//    * вытащить логин компонент в отдельный модуль (+)
+//    * вытащить компонент списка задач и форму добавления в отдельный модуль (+)
 // 2. Реализовать форму регистрации
 
 import { addTodo, deleteTodo, getTodos } from "./api.js";
-
+import { renderLoginComponent } from "./components/login-component.js";
 
 // TODO: Получать из хранилища данных
 let tasks = [];
@@ -27,28 +28,12 @@ const fetchTodosAndRender = () => {
 const renderApp = () => {
     const appEl = document.getElementById("app");
     if (!token) {
-        const appHtml = `<h1>Список задач</h1>
-            <div class="form">
-                <h3 class="form-title">Форма входа</h3>
-                <div class="form-row">
-                    Логин
-                    <input type="text" id="login-input" class="input" />
-                    <br><br>
-                    Пароль
-                    <input type="text" id="login-input" class="input" />
-                </div>
-                <br/>
-                <button class="button" id="login-button">Войти</button>
-            </div>
-
-            `;
-
-        appEl.innerHTML = appHtml;
-
-        document.getElementById('login-button').addEventListener('click', () => {
-            token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
-            fetchTodosAndRender();
-        })
+        renderLoginComponent({
+            appEl, setToken: (newToken) => {
+                token = newToken;
+            },
+            fetchTodosAndRender,
+        });
         return;
     }
 
@@ -96,7 +81,7 @@ const renderApp = () => {
             const id = deleteButton.dataset.id;
 
             // подписываемся на успешное завершение запроса с помощью then
-            deleteTodo({id, token,}).then((responseData) => {
+            deleteTodo({ id, token, }).then((responseData) => {
                 // получили данные и рендерим их в приложении
                 tasks = responseData.todos;
                 renderApp();
