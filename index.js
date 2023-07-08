@@ -25,17 +25,20 @@ const fetchTodosAndRender = () => {
     });
 };
 
-const renderApp = () => {
-    const appEl = document.getElementById("app");
-    if (!token) {
-        renderLoginComponent({
-            appEl, setToken: (newToken) => {
-                token = newToken;
-            },
-            fetchTodosAndRender,
+const renderApp = () => { // константа renderApp отрисовывает наше приложение, () => это анонимная стрелочная функция
+    const appEl = document.getElementById("app"); // константа appEl в себе держит ссылку на узел DOM, который в себе держит всю разметку
+    if (!token) { // Синтаксис !token означает что если токен есть, то то что в фигурных скобках не выполняется
+        renderLoginComponent({ // Все что в скобках это объект, который мы прокидываем в renderLoginComponent в качестве аргумента 
+            appEl, // ссылка на элемент с классом app
+            //newToken параметр метода, еще называют аргументом но параметр от аргумента отличается тем, что параметр объявляют при объявлении функции а аргумент прокидывают во время вызова функции так что тут это параметр
+            setToken: (newToken) => { // setToken это свойство которое содержит в себе стрелочную функцию, проще сказать что это метод
+                token = newToken; // token это переменная
+            }, // указываем метод. Функцию, которая является свойством объекта, называют методом этого объекта.
+            fetchTodosAndRender, //в метод fetchTodosAndRender кладем функцию fetchTodosAndRender чтобы вызвать внутри renderLoginComponent
         });
         return;
     }
+
     // Здесь хранится разметка списка задач
     const tasksHtml = tasks
         .map((task) => {
