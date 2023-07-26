@@ -41,11 +41,15 @@ export const renderApp = () => { // константа renderApp отрисов�
         return;
     }
 
+    const now = new Date();
+
+    format(now, "dd/MM/yyyy hh:mm"); // 26/03/2023 10:33
+
     const country = "ru";
     // Здесь хранится разметка списка задач
     const tasksHtml = tasks
         .map((task) => {
-            const createDate = format(new Date(task.created_at), 'dd/MM/yyyy hh:mm');
+            const createDate = format(new Date(task.created_at), 'yyyy/MM/dd hh:mm:ss');
             return `
                 <li class="task">
                     <p class="task-text">
