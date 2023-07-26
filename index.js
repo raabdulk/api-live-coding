@@ -10,6 +10,7 @@
 
 import { addTodo, deleteTodo, getTodos } from "./api.js";
 import { renderLoginComponent } from "./components/login-component.js";
+import { formatDateToRu, formatDateToUs } from "./lib/formatDate/formatDate.js"
 
 // TODO: Получать из хранилища данных
 let tasks = [];
@@ -25,7 +26,7 @@ const fetchTodosAndRender = () => {
     });
 };
 
-const renderApp = () => { // константа renderApp отрисовывает наше приложение, () => это анонимная стрелочная функция
+export const renderApp = () => { // константа renderApp отрисовывает наше приложение, () => это анонимная стрелочная функция
     const appEl = document.getElementById("app"); // константа appEl в себе держит ссылку на узел DOM, который в себе держит всю разметку
     if (!token) { // Синтаксис !token означает что если токен есть, то то что в фигурных скобках не выполняется
         renderLoginComponent({ // Все что в скобках это объект, который мы прокидываем в renderLoginComponent в качестве аргумента 
@@ -39,16 +40,18 @@ const renderApp = () => { // константа renderApp отрисовывае
         return;
     }
 
+    const country = "ru";
     // Здесь хранится разметка списка задач
     const tasksHtml = tasks
         .map((task) => {
             return `
-                    <li class="task">
-                        <p class="task-text">
-                            ${task.text} (Создал: ${task.user?.name ?? 'Неизвестно'})
-                            <button data-id="${task.id}" class="button delete-button">Удалить</button>
-                        </p>
-          </li > `;
+                <li class="task">
+                    <p class="task-text">
+                        ${task.text} (Создал: ${task.user?.name ?? 'Неизвестно'})
+                        <button data-id="${task.id}" class="button delete-button">Удалить</button>
+                    </p>
+                    <p><i>Задача создана: ${country === "ru" ? formatDateToRu(new Date(task.created_at)) : formatDateToUs(new Date(task.created_at))}</i></p>
+                 </li > `;
         })
         .join("");
 
